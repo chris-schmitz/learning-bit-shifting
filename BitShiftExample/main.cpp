@@ -12,9 +12,9 @@ long shift(long value);
 class RFIDData {
 public:
     static const uint8_t idLength = 10;
-    
-private:
     int idArray[idLength] = {0};
+
+private:
     uint8_t currentIndex = 0;
     
 public:
@@ -22,11 +22,23 @@ public:
         this->idArray[this->currentIndex] = element;
         this->currentIndex++;
     }
+    
+
     void printArray() {
         for (uint8_t i = 0 ; i < idLength; i ++){
             std::cout << std::hex << this->idArray[i];
         }
         std::cout << std::endl;
+    }
+    
+
+    bool compare( RFIDData payload2){
+        for (uint8_t i = 0 ; i < this->currentIndex; i++){
+            if (this->idArray[i] != payload2.idArray[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 };
 
@@ -43,12 +55,20 @@ int main(int argc, const char * argv[]) {
 //    printNumber(compiled, HEXADECIMAL);
     
     
-    RFIDData rfid;
-    
+    RFIDData rfid1;
+    RFIDData rfid2;
+
     for (uint8_t i = 0; i < 10; i++){
-        rfid.addIdElement(idArray[i]);
+        rfid1.addIdElement(idArray[i]);
     }
-    rfid.printArray();
+    rfid1.printArray();
+    
+    for (uint8_t i = 0; i < 9; i++){
+        rfid2.addIdElement(idArray[i]);
+    }
+    rfid2.printArray();
+    
+    std::cout << rfid1.compare(rfid2) << std::endl;
 }
 
 long shift(long value) {
